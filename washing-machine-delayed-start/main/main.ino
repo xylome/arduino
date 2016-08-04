@@ -1,61 +1,73 @@
-/*
- Debounce
-
- Each time the input pin goes from LOW to HIGH (e.g. because of a push-button
- press), the output pin is toggled from LOW to HIGH or HIGH to LOW.  There's
- a minimum delay between toggles to debounce the circuit (i.e. to ignore
- noise).
-
- The circuit:
- * LED attached from pin 13 to ground
- * pushbutton attached from pin 2 to +5V
- * 10K resistor attached from pin 2 to ground
-
- * Note: On most Arduino boards, there is already an LED on the board
- connected to pin 13, so you don't need any extra components for this example.
-
-
- created 21 November 2006
- by David A. Mellis
- modified 30 Aug 2011
- by Limor Fried
- modified 28 Dec 2012
- by Mike Walters
-
- This example code is in the public domain.
-
- http://www.arduino.cc/en/Tutorial/Debounce
+/**
+ * Washing machine delayed start.
+ * 
+ * Version 0.1
+ * 
+ * Copyright 2016  Xavier Héroult <xavier@placard.fr.eu.org>
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License") 
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *  
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *   
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
-// constants won't change. They're used here to
-// set pin numbers:
-const int buttonPin = 2;    // the number of the pushbutton pin
+const int buttonSet = 2;    // the number of the pushbutton pin
+const int buttonValid = 3;
+const int relayOnOff= 4;
+const int relayPlayPause = 5;
+
 const int ledPin = 13;      // the number of the LED pin
 
 // Variables will change:
 int ledState = HIGH;         // the current state of the output pin
-int buttonState;             // the current reading from the input pin
-int lastButtonState = LOW;   // the previous reading from the input pin
+int clicks = 0;
 
-// the following variables are long's because the time, measured in miliseconds,
-// will quickly become a bigger number than can be stored in an int.
-long lastDebounceTime = 0;  // the last time the output pin was toggled
-long debounceDelay = 50;//50;    // the debounce time; increase if the output flickers
+unsigned long units = 1000L * 60L * 60L; //
+unsigned long total_time = 0;
 
+int debounceDelay = 50;   // the debounce time; increase if the output flickers
 int lastStates[4]   = {0, 0, 0, 0};
-int lastDebounce[4] = {0, 0, 0, 0}; 
+long lastDebounce[4] = {0, 0, 0, 0}; 
 
 
 void setup() {
-  pinMode(buttonPin, INPUT);
+  pinMode(buttonSet, INPUT);
+  pinMode(buttonValid, INPUT);
+  pinMode(relayOnOff, OUTPUT);
+  pinMode(relayPlayPause, OUTPUT);
   pinMode(ledPin, OUTPUT);
   Serial.begin(9600);
-  // set initial LED state
   digitalWrite(ledPin, ledState);
+
+  while (!is_clicked(buttonValid)) {
+    if (is_clicked(buttonSet)) {
+      clicks++;
+    }
+  }
+  total_time = clicks*units;
 }
 
 boolean is_debounce(int button) {
     int current_state = digitalRead(button);
+    /**
+    Serial.print(button);
+    Serial.print(" - ");
+    Serial.print(lastStates[button]);
+    Serial.print(" - ");
+    Serial.print(current_state);
+    Serial.print(" - ");
+    Serial.print(lastDebounce[button]);
+    Serial.print(" - ");
+    Serial.println(millis());
+    delay(500);
+    **/
     if (lastStates[button] != current_state) {
       if (millis() - lastDebounce[button] > debounceDelay) {
         //Serial.println(" -= Debounce =-");
@@ -77,15 +89,26 @@ boolean is_clicked(int button) {
   return false;
 }
 
+void ignite() {
+  digitalWrite(relayOnOff, HIGH);
+  delay(1000);
+  digitalWrite(relayOnOff, LOW);
+  delay(1000);
+  digitalWrite(relayPlayPause, HIGH);
+  delay(1000);
+  digitalWrite(relayPlayPause, LOW);
+  delay(1000);
+}
+
 void loop() {
-  // read the state of the switch into a local variable:
- 
-    if (is_clicked(buttonPin)) {
-      ledState = !ledState;
-    }
-  
-  //delay(250);
-  
-  digitalWrite(ledPin, ledState);
+  while(total_time > 0) {
+    Serial.println(total_time);
+    digitalWrite(ledPin, ledState);
+    ledState =! ledState;
+    total_time -= 500;
+    delay(500);
+  }
+  ignite();
+  while(1) {}
 }
 
