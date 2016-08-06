@@ -1,84 +1,81 @@
 /**
- * Washing machine delayed start.
- * 
- * Version 0.1
- * 
- * Copyright 2016  Xavier Héroult <xavier@placard.fr.eu.org>
- * 
- * Licensed under the Apache License, Version 2.0 (the "License") 
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *  
- *   http://www.apache.org/licenses/LICENSE-2.0
- *   
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+   Washing machine delayed start.
 
-const int buttonSet = 2;    // the number of the pushbutton pin
-const int buttonValid = 3;
-const int relayOnOff= 4;
-const int relayPlayPause = 5;
+   Version 0.1
 
-const int ledPin = 13;      // the number of the LED pin
+   Copyright 2016  Xavier Héroult <xavier@placard.fr.eu.org>
 
-// Variables will change:
-int ledState = HIGH;         // the current state of the output pin
-int clicks = 0;
+   Licensed under the Apache License, Version 2.0 (the "License")
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
 
-unsigned long units = 1000L * 60L * 60L; //
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
+const int BUTTON_SET = 2;
+const int BUTTON_VALID = 3;
+const int RELAY_ON_OFF = 4;
+const int RELAY_PLAY_PAUSE = 5;
+const int LED_STATUS = 13;
+
+const int BARGRAPH[] = {6, 7, 8, 9, 10};
+const int BARGRAPH_SIZE = 5;
+
+int led_state = HIGH;
+int clicks = 1;
+
+const unsigned long UNITS = 1000L * 10L; // Units are 10 secs for debugging
 unsigned long total_time = 0;
+const int DELAY_LOOP = 500;
 
-int debounceDelay = 50;   // the debounce time; increase if the output flickers
-int lastStates[4]   = {0, 0, 0, 0};
-long lastDebounce[4] = {0, 0, 0, 0}; 
+const int DEBOUNCE_DELAY = 50;   // the debounce time; increase if the output flickers
+int last_states[4]   = {0, 0, 0, 0};
+long last_debounces[4] = {0, 0, 0, 0};
 
 
-void setup() {
-  pinMode(buttonSet, INPUT);
-  pinMode(buttonValid, INPUT);
-  pinMode(relayOnOff, OUTPUT);
-  pinMode(relayPlayPause, OUTPUT);
-  pinMode(ledPin, OUTPUT);
-  Serial.begin(9600);
-  digitalWrite(ledPin, ledState);
+void init_bargraph() {
+  int i = 0;
+  for (i; i < BARGRAPH_SIZE; i++) {
+    pinMode(BARGRAPH[i], OUTPUT);
+  }
+}
 
-  while (!is_clicked(buttonValid)) {
-    if (is_clicked(buttonSet)) {
-      clicks++;
+
+void display_bargraph(int value) {
+  int i = 0;
+  if (value > BARGRAPH_SIZE) {
+    value = BARGRAPH_SIZE;
+  }
+
+  for (i; i < BARGRAPH_SIZE; i++) {
+    if (i < value) {
+      digitalWrite(BARGRAPH[i], HIGH);
+    } else {
+      digitalWrite(BARGRAPH[i], LOW);
     }
   }
-  total_time = clicks*units;
 }
 
+
 boolean is_debounce(int button) {
-    int current_state = digitalRead(button);
-    /**
-    Serial.print(button);
-    Serial.print(" - ");
-    Serial.print(lastStates[button]);
-    Serial.print(" - ");
-    Serial.print(current_state);
-    Serial.print(" - ");
-    Serial.print(lastDebounce[button]);
-    Serial.print(" - ");
-    Serial.println(millis());
-    delay(500);
-    **/
-    if (lastStates[button] != current_state) {
-      if (millis() - lastDebounce[button] > debounceDelay) {
-        //Serial.println(" -= Debounce =-");
-        lastDebounce[button] = millis();
-        lastStates[button] = current_state;
-        return true;
-      } 
+  int current_state = digitalRead(button);
+  
+  if (last_states[button] != current_state) {
+    if (millis() - last_debounces[button] > DEBOUNCE_DELAY) {
+      last_debounces[button] = millis();
+      last_states[button] = current_state;
+      return true;
     }
-    //Serial.println(" -= No debounce =- ");
-    return false;
+  }
+  return false;
 }
+
 
 boolean is_clicked(int button) {
   if (is_debounce(button) && digitalRead(button) == LOW) {
@@ -89,26 +86,58 @@ boolean is_clicked(int button) {
   return false;
 }
 
+
 void ignite() {
-  digitalWrite(relayOnOff, HIGH);
+  digitalWrite(RELAY_ON_OFF, HIGH);
   delay(1000);
-  digitalWrite(relayOnOff, LOW);
+  digitalWrite(RELAY_ON_OFF, LOW);
   delay(1000);
-  digitalWrite(relayPlayPause, HIGH);
+  digitalWrite(RELAY_PLAY_PAUSE, HIGH);
   delay(1000);
-  digitalWrite(relayPlayPause, LOW);
+  digitalWrite(RELAY_PLAY_PAUSE, LOW);
   delay(1000);
 }
 
+
+int total_time_to_clicks(unsigned long total_time) {
+  unsigned long result = total_time / UNITS;
+  return result;
+}
+
+
+void setup() {
+  pinMode(BUTTON_SET, INPUT);
+  pinMode(BUTTON_VALID, INPUT);
+  pinMode(RELAY_ON_OFF, OUTPUT);
+  pinMode(RELAY_PLAY_PAUSE, OUTPUT);
+  pinMode(LED_STATUS, OUTPUT);
+  init_bargraph();
+  display_bargraph(clicks);
+  Serial.begin(9600);
+  digitalWrite(LED_STATUS, led_state);
+
+  while (!is_clicked(BUTTON_VALID)) {
+    if (is_clicked(BUTTON_SET)) {
+      clicks++;
+      if (clicks > BARGRAPH_SIZE) {
+        clicks = 1;
+      }
+      display_bargraph(clicks);
+    }
+  }
+  total_time = clicks * UNITS;
+}
+
+
 void loop() {
-  while(total_time > 0) {
-    Serial.println(total_time);
-    digitalWrite(ledPin, ledState);
-    ledState =! ledState;
-    total_time -= 500;
-    delay(500);
+  while (total_time > 0) {
+    digitalWrite(LED_STATUS, led_state);
+    led_state = ! led_state;
+    total_time -= DELAY_LOOP;
+    display_bargraph(total_time_to_clicks(total_time));
+    delay(DELAY_LOOP);
   }
   ignite();
-  while(1) {}
+  while (1) {}
 }
 
