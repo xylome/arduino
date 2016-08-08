@@ -88,13 +88,13 @@ boolean is_clicked(int button) {
 
 
 void ignite() {
-  digitalWrite(RELAY_ON_OFF, HIGH);
-  delay(1000);
   digitalWrite(RELAY_ON_OFF, LOW);
-  delay(1000);
-  digitalWrite(RELAY_PLAY_PAUSE, HIGH);
-  delay(1000);
+  delay(500);
+  digitalWrite(RELAY_ON_OFF, HIGH);
+  delay(5000);
   digitalWrite(RELAY_PLAY_PAUSE, LOW);
+  delay(500);
+  digitalWrite(RELAY_PLAY_PAUSE, HIGH);
   delay(1000);
 }
 
@@ -110,6 +110,8 @@ void setup() {
   pinMode(BUTTON_VALID, INPUT);
   pinMode(RELAY_ON_OFF, OUTPUT);
   pinMode(RELAY_PLAY_PAUSE, OUTPUT);
+  digitalWrite(RELAY_ON_OFF, HIGH);
+  digitalWrite(RELAY_PLAY_PAUSE, HIGH);
   pinMode(LED_STATUS, OUTPUT);
   init_bargraph();
   display_bargraph(clicks);
