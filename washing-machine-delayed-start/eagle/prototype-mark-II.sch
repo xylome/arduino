@@ -4475,7 +4475,6 @@ Standard 4-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="R6" library="eagle-ltspice" deviceset="R" device="0204/7" value="10000"/>
 <part name="R7" library="eagle-ltspice" deviceset="R" device="0204/7" value="10000"/>
 <part name="SUPPLY9" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
-<part name="GND1" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="GND2" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="GND3" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="GND4" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
@@ -4489,7 +4488,12 @@ Standard 4-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="SUPPLY1" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
 <part name="GND10" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="SW1" library="special" deviceset="SW_DIP-1" device=""/>
-<part name="+" library="SparkFun-Connectors" deviceset="M02" device="JST-PTH-VERT"/>
+<part name="+" library="SparkFun-Connectors" deviceset="M02" device="PTH"/>
+<part name="GND11" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
+<part name="GND12" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
+<part name="LED6" library="led" deviceset="LED" device="3MM"/>
+<part name="R8" library="eagle-ltspice" deviceset="R" device="0204/7" value="350"/>
+<part name="GND1" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -4507,21 +4511,20 @@ Standard 4-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="R3" gate="G$1" x="73.66" y="33.02"/>
 <instance part="R4" gate="G$1" x="73.66" y="25.4"/>
 <instance part="R5" gate="G$1" x="73.66" y="17.78"/>
-<instance part="SET_BTN" gate="G$1" x="55.88" y="86.36"/>
-<instance part="VALID_BTN" gate="G$1" x="91.44" y="86.36"/>
-<instance part="R6" gate="G$1" x="43.18" y="86.36"/>
-<instance part="R7" gate="G$1" x="81.28" y="86.36"/>
+<instance part="SET_BTN" gate="G$1" x="81.28" y="66.04"/>
+<instance part="VALID_BTN" gate="G$1" x="111.76" y="55.88"/>
+<instance part="R6" gate="G$1" x="71.12" y="66.04"/>
+<instance part="R7" gate="G$1" x="99.06" y="55.88"/>
 <instance part="SUPPLY9" gate="G$1" x="17.78" y="43.18"/>
-<instance part="GND1" gate="1" x="20.32" y="30.48" rot="R270"/>
-<instance part="GND2" gate="1" x="35.56" y="86.36" rot="R270"/>
-<instance part="GND3" gate="1" x="73.66" y="86.36" rot="R270"/>
+<instance part="GND2" gate="1" x="63.5" y="66.04" rot="R270"/>
+<instance part="GND3" gate="1" x="91.44" y="55.88" rot="R270"/>
 <instance part="GND4" gate="1" x="81.28" y="48.26" rot="R90"/>
 <instance part="GND5" gate="1" x="81.28" y="40.64" rot="R90"/>
 <instance part="GND6" gate="1" x="81.28" y="33.02" rot="R90"/>
 <instance part="GND7" gate="1" x="81.28" y="25.4" rot="R90"/>
 <instance part="GND8" gate="1" x="81.28" y="17.78" rot="R90"/>
-<instance part="RELAY" gate="G$1" x="99.06" y="53.34" rot="R180"/>
-<instance part="GND9" gate="1" x="91.44" y="55.88" rot="R270"/>
+<instance part="RELAY" gate="G$1" x="63.5" y="88.9" rot="R180"/>
+<instance part="GND9" gate="1" x="55.88" y="91.44" rot="R270"/>
 <instance part="FRAME1" gate="G$1" x="-7.62" y="-22.86"/>
 <instance part="FRAME1" gate="V" x="139.7" y="-22.86"/>
 <instance part="SUPPLY1" gate="G$1" x="30.48" y="144.78"/>
@@ -4531,6 +4534,11 @@ Standard 4-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <attribute name="VALUE" x="15.24" y="121.92" size="1.778" layer="96"/>
 <attribute name="NAME" x="17.78" y="130.302" size="1.778" layer="95"/>
 </instance>
+<instance part="GND11" gate="1" x="20.32" y="27.94" rot="R270"/>
+<instance part="GND12" gate="1" x="20.32" y="25.4" rot="R270"/>
+<instance part="LED6" gate="G$1" x="63.5" y="10.16" rot="R90"/>
+<instance part="R8" gate="G$1" x="73.66" y="10.16"/>
+<instance part="GND1" gate="1" x="81.28" y="10.16" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -4560,10 +4568,6 @@ Standard 4-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </segment>
 </net>
 <net name="GND" class="0">
-<segment>
-<pinref part="ARDUINO_DUE" gate="G$1" pin="GND@2"/>
-<pinref part="GND1" gate="1" pin="GND"/>
-</segment>
 <segment>
 <pinref part="R6" gate="G$1" pin="1"/>
 <pinref part="GND2" gate="1" pin="GND"/>
@@ -4602,56 +4606,30 @@ Standard 4-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="30.48" y1="127" x2="30.48" y2="116.84" width="0.1524" layer="91"/>
 <pinref part="+" gate="G$1" pin="1"/>
 </segment>
+<segment>
+<pinref part="ARDUINO_DUE" gate="G$1" pin="GND@1"/>
+<pinref part="GND11" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="ARDUINO_DUE" gate="G$1" pin="GND@0"/>
+<pinref part="GND12" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="R8" gate="G$1" pin="2"/>
+<pinref part="GND1" gate="1" pin="GND"/>
+</segment>
 </net>
 <net name="N$11" class="0">
 <segment>
 <pinref part="R6" gate="G$1" pin="2"/>
 <pinref part="SET_BTN" gate="G$1" pin="1"/>
-<wire x1="48.26" y1="86.36" x2="50.8" y2="86.36" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$12" class="0">
-<segment>
-<pinref part="SET_BTN" gate="G$1" pin="2"/>
-<wire x1="50.8" y1="83.82" x2="50.8" y2="58.42" width="0.1524" layer="91"/>
-<pinref part="ARDUINO_DUE" gate="G$1" pin="D2"/>
-<wire x1="50.8" y1="58.42" x2="48.26" y2="58.42" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$13" class="0">
-<segment>
-<pinref part="ARDUINO_DUE" gate="G$1" pin="5V"/>
-<wire x1="22.86" y1="38.1" x2="15.24" y2="38.1" width="0.1524" layer="91"/>
-<wire x1="15.24" y1="38.1" x2="15.24" y2="99.06" width="0.1524" layer="91"/>
-<pinref part="SET_BTN" gate="G$1" pin="3"/>
-<wire x1="15.24" y1="99.06" x2="60.96" y2="99.06" width="0.1524" layer="91"/>
-<wire x1="60.96" y1="99.06" x2="60.96" y2="86.36" width="0.1524" layer="91"/>
-<pinref part="VALID_BTN" gate="G$1" pin="3"/>
-<wire x1="96.52" y1="86.36" x2="99.06" y2="86.36" width="0.1524" layer="91"/>
-<wire x1="99.06" y1="86.36" x2="99.06" y2="99.06" width="0.1524" layer="91"/>
-<wire x1="99.06" y1="99.06" x2="60.96" y2="99.06" width="0.1524" layer="91"/>
-<junction x="60.96" y="99.06"/>
-<pinref part="RELAY" gate="G$1" pin="4"/>
-<wire x1="93.98" y1="48.26" x2="93.98" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="93.98" y1="40.64" x2="111.76" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="111.76" y1="40.64" x2="111.76" y2="99.06" width="0.1524" layer="91"/>
-<wire x1="111.76" y1="99.06" x2="99.06" y2="99.06" width="0.1524" layer="91"/>
-<junction x="99.06" y="99.06"/>
 </segment>
 </net>
 <net name="N$14" class="0">
 <segment>
 <pinref part="VALID_BTN" gate="G$1" pin="1"/>
 <pinref part="R7" gate="G$1" pin="2"/>
-</segment>
-</net>
-<net name="N$15" class="0">
-<segment>
-<pinref part="VALID_BTN" gate="G$1" pin="2"/>
-<wire x1="86.36" y1="83.82" x2="76.2" y2="83.82" width="0.1524" layer="91"/>
-<wire x1="76.2" y1="83.82" x2="76.2" y2="55.88" width="0.1524" layer="91"/>
-<pinref part="ARDUINO_DUE" gate="G$1" pin="*D3"/>
-<wire x1="76.2" y1="55.88" x2="48.26" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="106.68" y1="55.88" x2="104.14" y2="55.88" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$2" class="0">
@@ -4714,25 +4692,84 @@ Standard 4-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pinref part="SUPPLY1" gate="G$1" pin="VCC"/>
 </segment>
 </net>
-<net name="N$17" class="0">
-<segment>
-<pinref part="RELAY" gate="G$1" pin="3"/>
-<pinref part="ARDUINO_DUE" gate="G$1" pin="*D5"/>
-<wire x1="93.98" y1="50.8" x2="48.26" y2="50.8" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="RELAY_1" class="0">
-<segment>
-<pinref part="RELAY" gate="G$1" pin="2"/>
-<pinref part="ARDUINO_DUE" gate="G$1" pin="D4"/>
-<wire x1="93.98" y1="53.34" x2="48.26" y2="53.34" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="N$16" class="0">
 <segment>
 <pinref part="SW1" gate="G$1" pin="2"/>
 <wire x1="25.4" y1="129.54" x2="30.48" y2="129.54" width="0.1524" layer="91"/>
 <pinref part="+" gate="G$1" pin="2"/>
+</segment>
+</net>
+<net name="N$15" class="0">
+<segment>
+<pinref part="SET_BTN" gate="G$1" pin="2"/>
+<wire x1="76.2" y1="63.5" x2="76.2" y2="53.34" width="0.1524" layer="91"/>
+<pinref part="ARDUINO_DUE" gate="G$1" pin="D4"/>
+<wire x1="76.2" y1="53.34" x2="48.26" y2="53.34" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$13" class="0">
+<segment>
+<pinref part="RELAY" gate="G$1" pin="4"/>
+<wire x1="58.42" y1="83.82" x2="55.88" y2="83.82" width="0.1524" layer="91"/>
+<wire x1="55.88" y1="83.82" x2="55.88" y2="73.66" width="0.1524" layer="91"/>
+<wire x1="55.88" y1="73.66" x2="76.2" y2="73.66" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="73.66" x2="76.2" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="76.2" x2="76.2" y2="99.06" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="99.06" x2="12.7" y2="99.06" width="0.1524" layer="91"/>
+<wire x1="12.7" y1="99.06" x2="12.7" y2="38.1" width="0.1524" layer="91"/>
+<pinref part="ARDUINO_DUE" gate="G$1" pin="5V"/>
+<wire x1="12.7" y1="38.1" x2="22.86" y2="38.1" width="0.1524" layer="91"/>
+<pinref part="SET_BTN" gate="G$1" pin="3"/>
+<wire x1="86.36" y1="66.04" x2="91.44" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="91.44" y1="66.04" x2="91.44" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="91.44" y1="76.2" x2="76.2" y2="76.2" width="0.1524" layer="91"/>
+<junction x="76.2" y="76.2"/>
+<pinref part="VALID_BTN" gate="G$1" pin="3"/>
+<wire x1="116.84" y1="55.88" x2="121.92" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="121.92" y1="55.88" x2="121.92" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="121.92" y1="76.2" x2="91.44" y2="76.2" width="0.1524" layer="91"/>
+<junction x="91.44" y="76.2"/>
+</segment>
+</net>
+<net name="N$19" class="0">
+<segment>
+<pinref part="RELAY" gate="G$1" pin="3"/>
+<wire x1="58.42" y1="86.36" x2="53.34" y2="86.36" width="0.1524" layer="91"/>
+<wire x1="53.34" y1="86.36" x2="53.34" y2="55.88" width="0.1524" layer="91"/>
+<pinref part="ARDUINO_DUE" gate="G$1" pin="*D3"/>
+<wire x1="53.34" y1="55.88" x2="48.26" y2="55.88" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$20" class="0">
+<segment>
+<pinref part="RELAY" gate="G$1" pin="2"/>
+<wire x1="58.42" y1="88.9" x2="50.8" y2="88.9" width="0.1524" layer="91"/>
+<wire x1="50.8" y1="88.9" x2="50.8" y2="58.42" width="0.1524" layer="91"/>
+<pinref part="ARDUINO_DUE" gate="G$1" pin="D2"/>
+<wire x1="50.8" y1="58.42" x2="48.26" y2="58.42" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$12" class="0">
+<segment>
+<pinref part="VALID_BTN" gate="G$1" pin="2"/>
+<wire x1="106.68" y1="53.34" x2="106.68" y2="50.8" width="0.1524" layer="91"/>
+<pinref part="ARDUINO_DUE" gate="G$1" pin="*D5"/>
+<wire x1="106.68" y1="50.8" x2="48.26" y2="50.8" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$17" class="0">
+<segment>
+<pinref part="LED6" gate="G$1" pin="C"/>
+<pinref part="R8" gate="G$1" pin="1"/>
+</segment>
+</net>
+<net name="N$18" class="0">
+<segment>
+<pinref part="ARDUINO_DUE" gate="G$1" pin="D13"/>
+<wire x1="48.26" y1="30.48" x2="50.8" y2="30.48" width="0.1524" layer="91"/>
+<wire x1="50.8" y1="30.48" x2="50.8" y2="10.16" width="0.1524" layer="91"/>
+<pinref part="LED6" gate="G$1" pin="A"/>
+<wire x1="50.8" y1="10.16" x2="60.96" y2="10.16" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
