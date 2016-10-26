@@ -18,25 +18,25 @@
    limitations under the License.
 */
 
-const int BUTTON_SET = 2;
-const int BUTTON_VALID = 3;
-const int RELAY_ON_OFF = 4;
-const int RELAY_PLAY_PAUSE = 5;
+const int BUTTON_SET = 5;
+const int BUTTON_VALID = 4;
+const int RELAY_ON_OFF = 2;
+const int RELAY_PLAY_PAUSE = 3;
 const int LED_STATUS = 13;
 
-const int BARGRAPH[] = {6, 7, 8, 9, 10};
+const int BARGRAPH[] = {10, 9, 8, 7, 6};
 const int BARGRAPH_SIZE = 5;
 
 int led_state = HIGH;
-int clicks = 1;
+int clicks = 0;
 
-const unsigned long UNITS = 1000L * 10L; // Units are 10 secs for debugging
+const unsigned long UNITS = 1000L * 60L * 60L; // Units are 10 secs for debugging
 unsigned long total_time = 0;
 const int DELAY_LOOP = 500;
 
 const int DEBOUNCE_DELAY = 50;   // the debounce time; increase if the output flickers
-int last_states[4]   = {0, 0, 0, 0};
-long last_debounces[4] = {0, 0, 0, 0};
+int last_states[6]   = {0, 0, 0, 0, 0, 0};
+long last_debounces[6] = {0, 0, 0, 0, 0, 0};
 
 
 void init_bargraph() {
@@ -79,7 +79,9 @@ boolean is_debounce(int button) {
 
 boolean is_clicked(int button) {
   if (is_debounce(button) && digitalRead(button) == LOW) {
-    //Serial.println("Is clicked");
+    
+    Serial.print(button);
+    Serial.println(" is clicked");
     return true;
   }
   //Serial.println("Is not clicked");
@@ -91,7 +93,7 @@ void ignite() {
   digitalWrite(RELAY_ON_OFF, LOW);
   delay(500);
   digitalWrite(RELAY_ON_OFF, HIGH);
-  delay(5000);
+  delay(7000);
   digitalWrite(RELAY_PLAY_PAUSE, LOW);
   delay(500);
   digitalWrite(RELAY_PLAY_PAUSE, HIGH);
@@ -122,8 +124,9 @@ void setup() {
     if (is_clicked(BUTTON_SET)) {
       clicks++;
       if (clicks > BARGRAPH_SIZE) {
-        clicks = 1;
+        clicks = 0;
       }
+      Serial.println(clicks);
       display_bargraph(clicks);
     }
   }
@@ -136,7 +139,7 @@ void loop() {
     digitalWrite(LED_STATUS, led_state);
     led_state = ! led_state;
     total_time -= DELAY_LOOP;
-    display_bargraph(total_time_to_clicks(total_time));
+    display_bargraph(total_time_to_clicks(total_time)); 
     delay(DELAY_LOOP);
   }
   ignite();
